@@ -133,3 +133,18 @@ def encoding_tool(df, user='geo__city'):
 
     return reviews, cities, movies
 
+def test_function(city_id):
+    city_name = cities.loc[city_id]
+    print(f'City selected: {city_name}')
+    
+    city_test_df = test[test.city_id == city_id]
+    predictions = rec.pred_one_user(user_id=city_id)
+    city_test_df['prediction'] = predictions[test[test.city_id == city_id].movie_id.values]
+    
+    print(city_test_df)
+    
+    mse = sqrt(mean_squared_error(city_test_df.score, city_test_df.prediction))
+    recommend = movies.loc[rec.top_n_recs(user_id=city_id, n=10)]
+    
+    print(mse)
+    print(recommend)

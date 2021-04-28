@@ -9,7 +9,9 @@ import src.ItemItemRecommender as helper
 from scipy import sparse
 from scipy.sparse import csr_matrix
 
-
+#import necessary libraries
+from sklearn.metrics import mean_squared_error
+from math import sqrt
 
 
 
@@ -47,3 +49,5 @@ if __name__ == '__main__':
     print(test.groupby('city_id').count().head(20))
 
     city = input(f'Which city_id would you like to score?')
+
+    #helper.test_function(city_id=city)
