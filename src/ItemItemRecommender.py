@@ -94,7 +94,7 @@ def score(event_name):
     
     return(d[event_name])
 
-def load_data_city(filename='/Users/djbetts/Desktop/jf_project/data/recommender_top50_geo__city.csv'):
+def load_data_city(filename='/Users/djbetts/Desktop/jf_project/data/recommender_top50_geo__city_noChina.csv'):
     data = pd.read_csv(filename)
     df = data.copy()
 
@@ -110,16 +110,17 @@ def preprocess_df(df):
     df.drop(['event_name'], axis=1, inplace=True)
 
     return df
-    
-def encoding_tool(df):
-    groupby = df.groupby(['geo__city', 'video_title'])
+
+def encoding_tool(df, user='geo__city'):
+    groupby = df.groupby([user, 'video_title'])
 
     #could change groupby function to sum here
     reviews = groupby.mean()
     reviews.reset_index(inplace=True)
 
-    pivot_table = reviews.pivot_table(values='score', index='geo__city', columns='video_title')
-
+    pivot_table = reviews.pivot_table(values='score', index=user, columns='video_title')
+    
+    #change cities to user groups
     cities = pd.Series(pivot_table.index, index=np.arange(1,(len(pivot_table.index)+1)))
     cities_code = {v: k for k, v in cities.items()}
     reviews['city_id'] = reviews.geo__city.replace(to_replace=cities_code)
@@ -131,3 +132,4 @@ def encoding_tool(df):
     reviews = reviews[['city_id', 'movie_id', 'score']]
 
     return reviews, cities, movies
+

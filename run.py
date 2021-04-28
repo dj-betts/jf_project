@@ -9,36 +9,41 @@ import src.ItemItemRecommender as helper
 from scipy import sparse
 from scipy.sparse import csr_matrix
 
-#1. import data
-#2. convert to score
-#5. drop event_name
-#3. merge video titles
-#4. remove unlabeled city names
-#5. groupby user, item and sum
-#6. reset index to create list of reviews
 
-#7. create pivot table to visualize sparse matrix df
-#8. create user, movie encoder/id system
-#9. encode reviews for scipy.sparse.csr_matrix. index MUST be int not str
 
-#10. test, train, split
+
 
 if __name__ == '__main__':
-    df = helper.load_data_city(filename='/Users/djbetts/Desktop/jf_project/data/recommender_top50_geo__city.csv')
+    #1. import data
+    df = helper.load_data_city(filename='/Users/djbetts/Desktop/jf_project/data/recommender_top50_geo__city_noChina.csv')
 
+    #2. convert to score
+    #3. drop event_name
+
+    #4. merge video titles
+    #5. remove unlabeled city names
     df = helper.preprocess_df(df)
 
+    #8. create user, movie encoder/id system
+    #9. encode reviews for scipy.sparse.csr_matrix. index MUST be int not str
     reviews, cities, movies = helper.encoding_tool(df)
-    print(cities.shape)
-    print(movies.shape)
+    print(f'Number of users: {cities.shape}')
+    print(f'Number of movies: {movies.shape}')
 
+    #10. test, train, split
     train, test = train_test_split(reviews, random_state = 100)
+    print(f'Training Sample: {train.shape}')
+    print(f'Test Sample: {test.shape}')
 
     ratings_as_mat = csr_matrix((train.score, ((train.city_id), (train.movie_id))))
-    print(ratings_as_mat.shape)
+    print(ratings_as_mat.toarray())
 
     rec = ItemItemRecommender(neighborhood_size=75)
     rec.fit(ratings_as_mat)
 
     rec.pred_all_users(report_run_time=True)
     #automate testing
+
+    print(test.groupby('city_id').count().head(20))
+
+    city = input(f'Which city_id would you like to score?')
