@@ -63,24 +63,6 @@ class ItemItemRecommender(object):
                                         if item not in items_rated_by_this_user]
         return unrated_items_by_pred_rating[-n:]
 
-
-# def get_ratings_data():
-#     ratings_contents = pd.read_table("./data/u.data",
-#         names=["user", "movie", "rating", "timestamp"])
-
-#     return ratings_contents
-
-# def load_movies():
-#     columns = """movie id | movie title | release date | video release date |          IMDb URL | unknown | Action | Adventure | Animation |
-#             Children's | Comedy | Crime | Documentary | Drama | Fantasy |
-#               Film-Noir | Horror | Musical | Mystery | Romance | Sci-Fi |
-#               Thriller | War | Western """
-#     columns = [word.strip() for word in columns.split('|')]
-#     columns = [word.replace(' ','_') for word in columns]
-#     movies = pd.read_table("./data/u.item", names= columns, sep='|', encoding='latin-1')
-#     movies = movies[['movie_id', 'movie_title']]
-#     return movies
-
 def score(event_name):
     d ={
         'videostarts':1,
